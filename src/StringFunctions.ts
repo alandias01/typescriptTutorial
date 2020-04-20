@@ -1,7 +1,9 @@
 export class StringFunctions {
   constructor() {
     this.basic();
+    this.numbers();
   }
+
   out = (x: any) => x && console.log(x);
 
   basic = () => {
@@ -26,5 +28,21 @@ export class StringFunctions {
     this.out("startsWith: " + txt.startsWith("AB"));
     this.out("padStart: " + txt.padStart(28, "x")); //adds xx to beginning 28-26 = 2
     this.out("repeat: " + txt.repeat(2));
+  };
+
+  numbers = () => {
+    Number(true); // returns 1
+    Number(false); // returns 0
+    Number("10"); // returns 10
+    Number("10.33"); // returns 10.33
+
+    parseInt("10"); // returns 10
+    parseInt("10.33"); // returns 10
+
+    parseFloat("10"); // returns 10
+    parseFloat("10.33"); // returns 10.33
+
+    //Below returns the number of milliseconds since 1.1.1970.
+    Number(new Date("2017-09-30")); // returns 1506729600000
   };
 }
