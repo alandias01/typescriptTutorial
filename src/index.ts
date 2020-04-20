@@ -12,6 +12,6 @@ package.json scripts
  * 
  */
 
-import { Arrays } from "./ArrayFunctions";
+import { ArrayFunctions } from "./ArrayFunctions";
 
-new Arrays();
+new ArrayFunctions();
