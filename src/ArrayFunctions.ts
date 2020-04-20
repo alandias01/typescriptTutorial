@@ -1,4 +1,4 @@
-export class Arrays {
+export class ArrayFunctions {
   constructor() {
     this.basic();
   }
