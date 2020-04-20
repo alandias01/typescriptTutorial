@@ -13,5 +13,7 @@ package.json scripts
  */
 
 import { ArrayFunctions } from "./ArrayFunctions";
+import { StringFunctions } from "./StringFunctions";
 
-new ArrayFunctions();
+//new ArrayFunctions();
+new StringFunctions();
