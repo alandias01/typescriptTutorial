@@ -14,6 +14,7 @@ package.json scripts
 
 import { ArrayFunctions } from "./ArrayFunctions";
 import { StringFunctions } from "./StringFunctions";
+import { Files } from "./FilePathOsFunctions";
 
 //new ArrayFunctions();
-new StringFunctions();
+new Files();
