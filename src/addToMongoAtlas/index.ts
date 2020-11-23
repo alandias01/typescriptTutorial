@@ -54,3 +54,23 @@ function ReadFile() {
       console.log("done");
     });
 }
+
+/************************** Use for gre**************************/
+const greSchema = new Schema({
+  Word: { type: String },
+  Definition: { type: String },
+  Type: { type: String },
+});
+
+const greModel = mongoose.model("gre", greSchema);
+
+const ReadFilegre = () => {
+  console.log("object");
+  let rawdata = fs.readFileSync("grewords.json");
+  let greParsed = JSON.parse(rawdata);
+  greParsed.forEach((x: any) => {
+    console.log(x);
+  });
+};
+
+/************************** Use for gre END**********************/
