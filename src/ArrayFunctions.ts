@@ -21,6 +21,14 @@ export class ArrayFunctions {
 
     this.out("toString: " + arr.toString());
 
+    //Destructuring
+    var [firstItem] = arr;
+    this.out("First item of array: " + firstItem);
+
+    const objectdata = { oa: 1, ob: 2, oc: 3 };
+    const { oa } = objectdata;
+    this.out("Object destructured a: " + oa);
+
     arr.forEach((x) => this.out(x + ":" + x.length));
 
     var arrFiltered = arr.filter((x) => x.length < 5);

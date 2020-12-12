@@ -2,14 +2,14 @@
 mkdir <folder>, mkdir src, code readme.txt
 npm init -y
 git init
-code .gitignore, add /node_modules
-npm i -D typescript @types/node ts-node
-node .\node_modules\typescript\bin\tsc --init
+code .gitignore, add /node_modules /dist /build
+npm i -D typescript @types/node ts-node-dev
+npx tsc --init
 
 package.json scripts
-"start": "ts-node src/index.ts",
-"dev:d": "node --inspect-brk -r ts-node/register src/index.ts"
- * 
+"start": "ts-node-dev --respawn src/index.ts",
+"dev:d": "ts-node-dev --respawn --inspect-brk -- src/index.ts"
+
  */
 
 import { ArrayFunctions } from "./ArrayFunctions";
