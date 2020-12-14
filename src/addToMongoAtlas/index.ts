@@ -30,6 +30,7 @@ mongoAtlasConnection.catch((error) => {
 
 //ReadFilegreList(mongoAtlasConnection);
 //ReadFilegre(mongoAtlasConnection);
+//CreateUserListsFromListsAndGre(mongoAtlasConnection);
 
 /************************** START END****************************/
 
@@ -82,16 +83,22 @@ function InsertStockPrices() {
 
 /************************** Use for gre**************************/
 
+function GetGreWordSchema() {
+  const greWordSchema = new Schema({
+    word: { type: String },
+    definition: { type: String },
+    type: { type: String },
+  });
+
+  return greWordSchema;
+}
+
 function ReadFilegre(mongoConn: mongoose.Connection) {
   try {
     let rawdata = fs.readFileSync("./src/addToMongoAtlas/grewords.json");
     let greWordParsed = JSON.parse(rawdata);
 
-    const greWordSchema = new Schema({
-      word: { type: String },
-      definition: { type: String },
-      type: { type: String },
-    });
+    const greWordSchema = GetGreWordSchema();
 
     const greWordModel = mongoConn.model("word", greWordSchema);
 
@@ -115,6 +122,16 @@ function ReadFilegre(mongoConn: mongoose.Connection) {
   }
 }
 
+function GetGreListSchema() {
+  const greListSchema = new Schema({
+    email: { type: String },
+    list: { type: String },
+    word: { type: String },
+  });
+
+  return greListSchema;
+}
+
 function ReadFilegreList(mongoConn: mongoose.Connection) {
   try {
     const fileUrl = "./src/addToMongoAtlas/grelist.sql";
@@ -132,11 +149,7 @@ function ReadFilegreList(mongoConn: mongoose.Connection) {
     //   });
     // });
 
-    const greListSchema = new Schema({
-      email: { type: String },
-      list: { type: String },
-      word: { type: String },
-    });
+    const greListSchema = GetGreListSchema();
 
     const greListModel = mongoConn.model("lists", greListSchema);
 
@@ -162,6 +175,84 @@ function ReadFilegreList(mongoConn: mongoose.Connection) {
     console.log("Error in ReadFilegreList");
     console.log(error);
   }
+}
+
+function GetGreUserListSchema() {
+  const greUserListSchema = new Schema({
+    email: { type: String },
+    list: { type: String },
+    word: { type: String },
+    definition: { type: String },
+    type: { type: String },
+  });
+
+  return greUserListSchema;
+}
+
+interface IGreList extends mongoose.Document {
+  email: string;
+  list: string;
+  word: string;
+}
+interface IGreWord extends mongoose.Document {
+  word: string;
+  definition: string;
+  type: string;
+}
+
+async function CreateUserLists(mongoConn: mongoose.Connection) {
+  try {
+    const greListSchema = GetGreListSchema();
+    const greWordSchema = GetGreWordSchema();
+    const greUserListSchema = GetGreUserListSchema();
+
+    const greListModel = mongoConn.model<IGreList>("lists", greListSchema);
+    const greWordModel = mongoConn.model<IGreWord>("words", greWordSchema);
+    const greUserListModel = mongoConn.model("userlists", greUserListSchema);
+
+    const greLists = await greListModel.find({});
+
+    const grelistsOnlyWords = greLists.map((x) => x.word);
+
+    const greWords = await greWordModel.find({
+      word: { $in: grelistsOnlyWords },
+    });
+
+    const grewordsOnlyWords = greWords.map((x) => x.word);
+
+    let difference = grelistsOnlyWords.filter(
+      (x) => !grewordsOnlyWords.includes(x)
+    );
+    console.log(difference);
+
+    let promiseList: Promise<mongoose.Document>[] = [];
+
+    greLists.forEach((x: IGreList) => {
+      const wordFound = greWords.find((y) => x.word === y.word);
+      if (!wordFound) {
+        console.log(`Could not find ${x.word}`);
+      } else {
+        let userListObject = {
+          email: x.email,
+          list: x.list,
+          word: x.word,
+          definition: wordFound.definition,
+          type: wordFound.type,
+        };
+
+        const instane = new greUserListModel(userListObject);
+        promiseList.push(instane.save());
+      }
+    });
+
+    Promise.all(promiseList)
+      .then((x) => {
+        console.log("All data inserted");
+      })
+      .catch((error) => {
+        console.log("Error inserting data");
+      });
+  } catch (error) {}
 }
 
 //We have an sql insert statement for list items that we want to deconstruct into objects
