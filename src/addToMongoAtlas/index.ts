@@ -19,6 +19,8 @@ const mongoAtlasConnection = mongoose.createConnection(
   connOptions
 );
 
+mongoAtlasConnection.on("connected", () => console.log("Connected to atlas"));
+
 mongoAtlasConnection.catch((error) => {
   console.log("mongoAtlasConnection error");
   console.log(error);
@@ -26,7 +28,8 @@ mongoAtlasConnection.catch((error) => {
 
 /************************** START *******************************/
 
-ReadFilegreList(mongoAtlasConnection);
+//ReadFilegreList(mongoAtlasConnection);
+//ReadFilegre(mongoAtlasConnection);
 
 /************************** START END****************************/
 
@@ -79,20 +82,37 @@ function InsertStockPrices() {
 
 /************************** Use for gre**************************/
 
-function ReadFilegre() {
-  let rawdata = fs.readFileSync("./src/addToMongoAtlas/grewords.json");
-  let greParsed = JSON.parse(rawdata);
-  greParsed.forEach((x: any) => {
-    console.log(x);
-  });
+function ReadFilegre(mongoConn: mongoose.Connection) {
+  try {
+    let rawdata = fs.readFileSync("./src/addToMongoAtlas/grewords.json");
+    let greWordParsed = JSON.parse(rawdata);
 
-  const greSchema = new Schema({
-    Word: { type: String },
-    Definition: { type: String },
-    Type: { type: String },
-  });
+    const greWordSchema = new Schema({
+      word: { type: String },
+      definition: { type: String },
+      type: { type: String },
+    });
 
-  const greModel = mongoose.model("gre", greSchema);
+    const greWordModel = mongoConn.model("word", greWordSchema);
+
+    let promiseList: Promise<mongoose.Document>[] = [];
+    greWordParsed.forEach((x: any) => {
+      //console.log(x);
+      const instance = new greWordModel(x);
+      promiseList.push(instance.save());
+    });
+
+    Promise.all(promiseList)
+      .then((x) => {
+        console.log("All data inserted");
+      })
+      .catch((error) => {
+        console.log("Error inserting data");
+      });
+  } catch (error) {
+    console.log("Error in ReadFilegre");
+    console.log(error);
+  }
 }
 
 function ReadFilegreList(mongoConn: mongoose.Connection) {
