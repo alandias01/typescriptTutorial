@@ -119,6 +119,31 @@ function switchstmt(grade: string) {
   }
 }
 
+//Generic Functions
+interface IGenA {
+  FirstName: string;
+  age: number;
+}
+
+interface IGenB {
+  MiddleName: string;
+  age: number;
+}
+
+const objA: IGenA = {
+  FirstName: "Alan",
+  age: 1,
+};
+
+const objB: IGenB = {
+  MiddleName: "Manuel",
+  age: 2,
+};
+function genFunc01<T extends IGenA, U extends IGenB>(a: T, b: U): T {
+  a.age += b.age;
+  return a;
+}
+
 //**********Class**********
 
 interface IBasicClass {
