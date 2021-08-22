@@ -16,6 +16,8 @@ import { ArrayFunctions } from "./ArrayFunctions";
 import { StringFunctions } from "./StringFunctions";
 import { Files } from "./FilePathOsFunctions";
 import { PromiseTutorial } from "./PromiseTutorial";
+import { ErrorHandling } from "./ErrorHandling";
 
 //new ArrayFunctions();
-new PromiseTutorial();
+//new PromiseTutorial();
+new ErrorHandling();
