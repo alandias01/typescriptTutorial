@@ -17,7 +17,9 @@ import { StringFunctions } from "./StringFunctions";
 import { Files } from "./FilePathOsFunctions";
 import { PromiseTutorial } from "./PromiseTutorial";
 import { ErrorHandling } from "./ErrorHandling";
+import { TrueCar } from "./TrueCar";
 
 //new ArrayFunctions();
 //new PromiseTutorial();
-new ErrorHandling();
+//new ErrorHandling();
+new TrueCar();
