@@ -9,17 +9,8 @@ npx tsc --init
 package.json scripts
 "start": "ts-node-dev --respawn src/index.ts",
 "dev:d": "ts-node-dev --respawn --inspect-brk -- src/index.ts"
-
  */
 
-import { ArrayFunctions } from "./ArrayFunctions";
-import { StringFunctions } from "./StringFunctions";
-import { Files } from "./FilePathOsFunctions";
-import { PromiseTutorial } from "./PromiseTutorial";
-import { ErrorHandling } from "./ErrorHandling";
-import { TrueCar } from "./TrueCar";
+import { Playground } from "./Playground";
 
-//new ArrayFunctions();
-//new PromiseTutorial();
-//new ErrorHandling();
-new TrueCar();
+new Playground();
